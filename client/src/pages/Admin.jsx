@@ -167,6 +167,8 @@ function Dashboard({ onLogout }) {
             <label>{t('admin_theme')}</label>
             <select value={theme} onChange={(e) => setTheme(e.target.value)}>
               <option value="lotr">{t('theme_lotr')}</option>
+              <option value="hpdoor">{t('theme_hpdoor')}</option>
+              <option value="hp">{t('theme_hp')}</option>
               <option value="basic">{t('theme_basic')}</option>
             </select>
           </div>
@@ -255,12 +257,20 @@ function LinkItem({ link, onChange }) {
           </div>
         </div>
         <select
-          className={`link-theme-select ${link.theme === 'lotr' ? 'theme-lotr' : ''}`}
+          className={`link-theme-select ${
+            link.theme === 'lotr'
+              ? 'theme-lotr'
+              : link.theme === 'hp' || link.theme === 'hpdoor'
+              ? 'theme-hp'
+              : ''
+          }`}
           value={link.theme}
           onChange={(e) => api.setTheme(link.token, e.target.value).then(onChange)}
           aria-label={t('admin_theme')}
         >
           <option value="lotr">{t('theme_lotr')}</option>
+          <option value="hpdoor">{t('theme_hpdoor')}</option>
+          <option value="hp">{t('theme_hp')}</option>
           <option value="basic">{t('theme_basic')}</option>
         </select>
       </div>
