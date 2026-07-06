@@ -36,6 +36,7 @@ Copy `.env.example` to `.env` and fill it in. **No secret lives in the code.**
 | `SESSION_SECRET` | Key used to sign the login cookie (long random string) |
 | `HA_WEBHOOK_URL` | Home Assistant webhook that opens the gate |
 | `HA_WEBHOOK_METHOD` | Webhook HTTP method (default `POST`) |
+| `HA_WEBHOOK_QUERY` | Optional query string appended to the webhook URL (e.g. `dev123`) — a shared secret verified by the HA automation. Leave empty if HA verifies none. |
 | `DEFAULT_LOCALE` | Default UI language: `en`, `es`, `de`, `sk`, `cs`, `pl`, `zh`, `ja`, `hu` |
 | `DB_PATH` | Path to the SQLite file (default `./data/mellon.db`) |
 | `PORT` | Server port (default `3000`) |
@@ -151,10 +152,56 @@ mode: single
 > network, keep `local_only: false` and expose HA over HTTPS. You can also add a
 > condition in the automation (e.g. time of day) for extra safety.
 
+### Optional: require a secret query parameter
+
+For an extra layer beyond the webhook ID, you can require a secret **query
+parameter**. In the automation add an **"and if" condition → Template** that
+only continues when the parameter is present:
+
+```
+{{ 'dev123' in trigger.query }}
+```
+
+`trigger.query` is the dict of URL query parameters, so this passes only when the
+request URL contains `?dev123`. In YAML the automation looks like:
+
+```yaml
+alias: Mellon — open the gate
+trigger:
+  - platform: webhook
+    webhook_id: mellon-gate-opener
+    allowed_methods:
+      - POST
+    local_only: false
+condition:
+  - condition: template
+    value_template: "{{ 'dev123' in trigger.query }}"
+action:
+  - service: cover.open_cover
+    target:
+      entity_id: cover.driveway_gate
+mode: single
+```
+
+Then set the matching secret in Mellon:
+
+```
+HA_WEBHOOK_QUERY=dev123
+```
+
+Mellon appends it to the webhook URL (`…/api/webhook/mellon-gate-opener?dev123`)
+on every call. If `HA_WEBHOOK_QUERY` is left empty, the webhook is called without
+any query — use that when the automation verifies no query parameter.
+
 ### Test the webhook
 
 ```bash
+# without query verification
 curl -X POST https://<your-home-assistant>/api/webhook/mellon-gate-opener \
+  -H "Content-Type: application/json" -d '{"source":"mellon"}'
+
+# with a secret query parameter (HA_WEBHOOK_QUERY=dev123)
+curl -X POST "https://<your-home-assistant>/api/webhook/mellon-gate-opener?dev123" \
   -H "Content-Type: application/json" -d '{"source":"mellon"}'
 ```
 If the gate reacts, Mellon will work too.

@@ -18,6 +18,11 @@ const PORT = process.env.PORT || 3000;
 
 const HA_WEBHOOK_URL = process.env.HA_WEBHOOK_URL || '';
 const HA_WEBHOOK_METHOD = (process.env.HA_WEBHOOK_METHOD || 'POST').toUpperCase();
+// Optional query string appended to the webhook URL (verbatim, without a
+// leading '?'), e.g. "dev123" or "token=dev123". Use it if the Home Assistant
+// automation verifies a query parameter (e.g. `{{ 'dev123' in trigger.query }}`).
+// If empty, the webhook is called without any query — assumes HA verifies none.
+const HA_WEBHOOK_QUERY = (process.env.HA_WEBHOOK_QUERY || '').replace(/^\?/, '');
 const THEMES = ['basic', 'lotr'];
 
 // Supported UI locales; must match the codes in client/src/i18n.jsx.
@@ -48,10 +53,13 @@ async function callWebhook() {
     console.warn('[webhook] HA_WEBHOOK_URL is not set — simulating a successful open.');
     return true; // in dev without Home Assistant we just simulate success
   }
+  const target = HA_WEBHOOK_QUERY
+    ? HA_WEBHOOK_URL + (HA_WEBHOOK_URL.includes('?') ? '&' : '?') + HA_WEBHOOK_QUERY
+    : HA_WEBHOOK_URL;
   const controller = new AbortController();
   const t = setTimeout(() => controller.abort(), 10_000);
   try {
-    const res = await fetch(HA_WEBHOOK_URL, {
+    const res = await fetch(target, {
       method: HA_WEBHOOK_METHOD,
       headers: { 'Content-Type': 'application/json' },
       body: HA_WEBHOOK_METHOD === 'GET' ? undefined : JSON.stringify({ source: 'mellon' }),
