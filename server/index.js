@@ -137,15 +137,21 @@ app.post('/api/admin/links', requireAdmin, (req, res) => {
   res.status(201).json({ ...publicLink(row), used_count: row.used_count, created_at: row.created_at });
 });
 
-// enable / disable a link
+// update a link: enable/disable (active) and/or change the visual (theme)
 app.patch('/api/admin/links/:token', requireAdmin, (req, res) => {
-  const active = req.body?.active ? 1 : 0;
-  const info = db
-    .prepare('UPDATE links SET active = ? WHERE token = ?')
-    .run(active, req.params.token);
-  if (info.changes === 0) return res.status(404).json({ error: 'not_found' });
   const row = db.prepare('SELECT * FROM links WHERE token = ?').get(req.params.token);
-  res.json({ ...publicLink(row), used_count: row.used_count, created_at: row.created_at });
+  if (!row) return res.status(404).json({ error: 'not_found' });
+
+  const active = typeof req.body?.active === 'boolean' ? (req.body.active ? 1 : 0) : row.active;
+  const theme = THEMES.includes(req.body?.theme) ? req.body.theme : row.theme;
+
+  db.prepare('UPDATE links SET active = ?, theme = ? WHERE token = ?').run(
+    active,
+    theme,
+    req.params.token
+  );
+  const updated = db.prepare('SELECT * FROM links WHERE token = ?').get(req.params.token);
+  res.json({ ...publicLink(updated), used_count: updated.used_count, created_at: updated.created_at });
 });
 
 app.delete('/api/admin/links/:token', requireAdmin, (req, res) => {

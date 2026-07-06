@@ -218,9 +218,15 @@ function LinkItem({ link, onChange }) {
             {new Date(link.created_at).toLocaleString(locale)}
           </div>
         </div>
-        <span className={`badge ${link.theme === 'lotr' ? 'theme-lotr' : ''}`}>
-          {link.theme === 'lotr' ? t('theme_lotr') : t('theme_basic')}
-        </span>
+        <select
+          className={`link-theme-select ${link.theme === 'lotr' ? 'theme-lotr' : ''}`}
+          value={link.theme}
+          onChange={(e) => api.setTheme(link.token, e.target.value).then(onChange)}
+          aria-label={t('admin_theme')}
+        >
+          <option value="lotr">{t('theme_lotr')}</option>
+          <option value="basic">{t('theme_basic')}</option>
+        </select>
       </div>
 
       <div className="progress">

@@ -23,6 +23,7 @@ export const api = {
   listLinks: () => req('GET', '/api/admin/links'),
   createLink: (payload) => req('POST', '/api/admin/links', payload),
   setActive: (token, active) => req('PATCH', `/api/admin/links/${token}`, { active }),
+  setTheme: (token, theme) => req('PATCH', `/api/admin/links/${token}`, { theme }),
   deleteLink: (token) => req('DELETE', `/api/admin/links/${token}`),
   // public
   getLink: (token) => req('GET', `/api/link/${token}`),
