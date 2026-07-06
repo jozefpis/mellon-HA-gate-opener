@@ -79,6 +79,12 @@ select {
   border-color: rgba(188, 212, 255, 0.35);
   color: #bcd4ff;
 }
+/* Visual switcher sits in the opposite corner from the language switcher */
+.visual-switcher {
+  right: auto;
+  left: 12px;
+  max-width: 46vw;
+}
 
 /* ---------- Layout helper ---------- */
 .screen {

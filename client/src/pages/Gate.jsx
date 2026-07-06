@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGate } from '../useGate.js';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
@@ -15,6 +16,7 @@ const THEME_RENDERERS = {
       active="/harry-potter-activated.png"
       tagline="hp_tagline"
       objectPosition="center 40%"
+      buttonKey="hp_button"
     />
   ),
   hpdoor: (g) => (
@@ -29,10 +31,48 @@ const THEME_RENDERERS = {
   basic: (g) => <BasicGate {...g} />,
 };
 
+// Visuals the viewer can switch between on the link page.
+const VISUALS = [
+  { code: 'lotr', key: 'theme_lotr' },
+  { code: 'hpdoor', key: 'theme_hpdoor' },
+  { code: 'hp', key: 'theme_hp' },
+  { code: 'basic', key: 'theme_basic' },
+];
+
+function VisualSwitcher({ value, onChange }) {
+  const { t } = useI18n();
+  return (
+    <select
+      className="locale-switcher on-dark visual-switcher"
+      value={value}
+      onChange={(e) => onChange(e.target.value)}
+      aria-label="Visual"
+    >
+      {VISUALS.map((v) => (
+        <option key={v.code} value={v.code}>
+          {t(v.key)}
+        </option>
+      ))}
+    </select>
+  );
+}
+
 export default function Gate() {
   const { token } = useParams();
   const { t } = useI18n();
   const gate = useGate(token);
+  // Per-viewer visual override for this link (persisted per token).
+  const [override, setOverride] = useState(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(`mellon_theme_${token}`);
+    if (saved && THEME_RENDERERS[saved]) setOverride(saved);
+  }, [token]);
+
+  function chooseVisual(v) {
+    setOverride(v);
+    localStorage.setItem(`mellon_theme_${token}`, v);
+  }
 
   if (gate.status === 'loading') {
     return (
@@ -54,6 +94,13 @@ export default function Gate() {
     );
   }
 
-  const render = THEME_RENDERERS[gate.link?.theme] || THEME_RENDERERS.basic;
-  return render(gate);
+  const activeTheme = override || gate.link?.theme;
+  const render = THEME_RENDERERS[activeTheme] || THEME_RENDERERS.basic;
+
+  return (
+    <>
+      {render(gate)}
+      <VisualSwitcher value={activeTheme} onChange={chooseVisual} />
+    </>
+  );
 }

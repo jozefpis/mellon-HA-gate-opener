@@ -11,8 +11,10 @@ export default function HpGate({
   active = '/harry-potter-activated.png',
   tagline = 'hp_tagline',
   objectPosition = 'center 40%',
+  buttonKey, // translation key for the button; falls back to the "Alohomora" charm
 }) {
   const { t } = useI18n();
+  const buttonLabel = buttonKey ? t(buttonKey) : 'Alohomora';
   const remaining = link?.remaining ?? 0;
   const isOpen = status === 'opening' || status === 'success';
   const canPress = status === 'ready';
@@ -33,7 +35,7 @@ export default function HpGate({
           <>
             <p className="hp-tagline">{t(tagline)}</p>
             <button className="alohomora-btn" onClick={open}>
-              <span>Alohomora</span>
+              <span>{buttonLabel}</span>
             </button>
             <p className="hp-remaining">
               {t('basic_remaining', { remaining, max: link.max_uses })}
