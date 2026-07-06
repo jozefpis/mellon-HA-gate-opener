@@ -144,10 +144,12 @@ app.patch('/api/admin/links/:token', requireAdmin, (req, res) => {
 
   const active = typeof req.body?.active === 'boolean' ? (req.body.active ? 1 : 0) : row.active;
   const theme = THEMES.includes(req.body?.theme) ? req.body.theme : row.theme;
+  const label = typeof req.body?.label === 'string' ? req.body.label.slice(0, 120) : row.label;
 
-  db.prepare('UPDATE links SET active = ?, theme = ? WHERE token = ?').run(
+  db.prepare('UPDATE links SET active = ?, theme = ?, label = ? WHERE token = ?').run(
     active,
     theme,
+    label,
     req.params.token
   );
   const updated = db.prepare('SELECT * FROM links WHERE token = ?').get(req.params.token);

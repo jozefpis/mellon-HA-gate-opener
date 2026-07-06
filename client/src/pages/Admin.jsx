@@ -195,9 +195,21 @@ function Dashboard({ onLogout }) {
 function LinkItem({ link, onChange }) {
   const { t, locale } = useI18n();
   const [copied, setCopied] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(link.label);
   const url = `${window.location.origin}/g/${link.token}`;
   const used = link.max_uses - link.remaining;
   const exhausted = link.remaining <= 0;
+
+  function startEdit() {
+    setDraft(link.label);
+    setEditing(true);
+  }
+  async function saveLabel() {
+    await api.setLabel(link.token, draft.trim()).catch(() => {});
+    setEditing(false);
+    onChange();
+  }
 
   async function copy() {
     try {
@@ -212,8 +224,32 @@ function LinkItem({ link, onChange }) {
   return (
     <div className={`link-item ${exhausted ? 'exhausted' : ''}`}>
       <div className="top">
-        <div>
-          <div className="label">{link.label || t('admin_untitled')}</div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          {editing ? (
+            <div className="label-edit-row">
+              <input
+                className="label-edit"
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                placeholder={t('admin_untitled')}
+                autoFocus
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') saveLabel();
+                  if (e.key === 'Escape') setEditing(false);
+                }}
+              />
+              <button className="icon-btn ok" onClick={saveLabel} aria-label="Save">
+                ✓
+              </button>
+              <button className="icon-btn" onClick={() => setEditing(false)} aria-label="Cancel">
+                ✕
+              </button>
+            </div>
+          ) : (
+            <button className="label label-btn" onClick={startEdit} title={t('admin_edit_label')}>
+              {link.label || t('admin_untitled')} <span className="edit-ico">✎</span>
+            </button>
+          )}
           <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
             {new Date(link.created_at).toLocaleString(locale)}
           </div>
