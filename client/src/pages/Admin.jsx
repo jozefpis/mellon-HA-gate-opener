@@ -200,6 +200,8 @@ function LinkItem({ link, onChange }) {
   const [copied, setCopied] = useState(false);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(link.label);
+  const [editingUses, setEditingUses] = useState(false);
+  const [draftUses, setDraftUses] = useState(link.max_uses);
   const url = `${window.location.origin}/g/${link.token}`;
   const used = link.max_uses - link.remaining;
   const exhausted = link.remaining <= 0;
@@ -211,6 +213,19 @@ function LinkItem({ link, onChange }) {
   async function saveLabel() {
     await api.setLabel(link.token, draft.trim()).catch(() => {});
     setEditing(false);
+    onChange();
+  }
+
+  function startEditUses() {
+    setDraftUses(link.max_uses);
+    setEditingUses(true);
+  }
+  async function saveUses() {
+    const n = parseInt(draftUses, 10);
+    if (Number.isInteger(n) && n >= Math.max(1, used) && n <= 10000) {
+      await api.setMaxUses(link.token, n).catch(() => {});
+    }
+    setEditingUses(false);
     onChange();
   }
 
@@ -282,22 +297,51 @@ function LinkItem({ link, onChange }) {
       <div className="progress">
         <span style={{ width: `${(used / link.max_uses) * 100}%` }} />
       </div>
-      <div className="link-meta">
-        <span>
-          {t('admin_used')}: <strong>{used}</strong> / {link.max_uses}
-        </span>
-        <span>
-          {exhausted ? (
-            <strong style={{ color: 'var(--danger)' }}>{t('admin_exhausted')}</strong>
-          ) : !link.active ? (
-            <strong style={{ color: 'var(--danger)' }}>{t('admin_disabled_state')}</strong>
-          ) : (
-            <span style={{ color: 'var(--ok)' }}>
-              {t('admin_remaining_state', { n: link.remaining })}
-            </span>
-          )}
-        </span>
-      </div>
+      {editingUses ? (
+        <div className="label-edit-row" style={{ margin: '8px 0' }}>
+          <span style={{ color: 'var(--muted)', fontSize: '0.82rem', whiteSpace: 'nowrap' }}>
+            {t('admin_used')}: {used} /
+          </span>
+          <input
+            className="label-edit"
+            type="number"
+            min={Math.max(1, used)}
+            max="10000"
+            inputMode="numeric"
+            value={draftUses}
+            onChange={(e) => setDraftUses(e.target.value)}
+            autoFocus
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') saveUses();
+              if (e.key === 'Escape') setEditingUses(false);
+            }}
+          />
+          <button className="icon-btn ok" onClick={saveUses} aria-label="Save">
+            ✓
+          </button>
+          <button className="icon-btn" onClick={() => setEditingUses(false)} aria-label="Cancel">
+            ✕
+          </button>
+        </div>
+      ) : (
+        <div className="link-meta">
+          <button className="uses-btn" onClick={startEditUses} title={t('admin_edit_uses')}>
+            {t('admin_used')}: <strong>{used}</strong> / {link.max_uses}{' '}
+            <span className="edit-ico">✎</span>
+          </button>
+          <span>
+            {exhausted ? (
+              <strong style={{ color: 'var(--danger)' }}>{t('admin_exhausted')}</strong>
+            ) : !link.active ? (
+              <strong style={{ color: 'var(--danger)' }}>{t('admin_disabled_state')}</strong>
+            ) : (
+              <span style={{ color: 'var(--ok)' }}>
+                {t('admin_remaining_state', { n: link.remaining })}
+              </span>
+            )}
+          </span>
+        </div>
+      )}
 
       <div className="share-row">
         <input readOnly value={url} onFocus={(e) => e.target.select()} />

@@ -146,12 +146,19 @@ app.patch('/api/admin/links/:token', requireAdmin, (req, res) => {
   const theme = THEMES.includes(req.body?.theme) ? req.body.theme : row.theme;
   const label = typeof req.body?.label === 'string' ? req.body.label.slice(0, 120) : row.label;
 
-  db.prepare('UPDATE links SET active = ?, theme = ?, label = ? WHERE token = ?').run(
-    active,
-    theme,
-    label,
-    req.params.token
-  );
+  let maxUses = row.max_uses;
+  if (req.body?.max_uses !== undefined) {
+    const m = parseInt(req.body.max_uses, 10);
+    // can't go below what's already been used, and keep a sane upper bound
+    if (!Number.isInteger(m) || m < row.used_count || m < 1 || m > 10000) {
+      return res.status(400).json({ error: 'invalid_count' });
+    }
+    maxUses = m;
+  }
+
+  db.prepare(
+    'UPDATE links SET active = ?, theme = ?, label = ?, max_uses = ? WHERE token = ?'
+  ).run(active, theme, label, maxUses, req.params.token);
   const updated = db.prepare('SELECT * FROM links WHERE token = ?').get(req.params.token);
   res.json({ ...publicLink(updated), used_count: updated.used_count, created_at: updated.created_at });
 });
