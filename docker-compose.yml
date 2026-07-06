@@ -1,0 +1,14 @@
+services:
+  mellon:
+    build: .
+    # or use a prebuilt image if you built one: image: mellon:latest
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env # copy .env.example -> .env and fill in the values
+    volumes:
+      - mellon-data:/app/data # persistent SQLite database
+    restart: unless-stopped
+
+volumes:
+  mellon-data:

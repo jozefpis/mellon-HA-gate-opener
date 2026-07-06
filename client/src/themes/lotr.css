@@ -1,0 +1,168 @@
+.lotr-theme {
+  --mith: #bcd4ff;
+  --mith-glow: #7fb0ff;
+  --gold: #e8c979;
+  position: relative;
+  min-height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 20px calc(env(safe-area-inset-bottom, 0px) + 40px);
+  background:
+    radial-gradient(140% 100% at 50% 8%, #10182b 0%, #060810 55%, #03040a 100%);
+  font-family: 'Cinzel', 'Trajan Pro', Georgia, 'Times New Roman', serif;
+  color: var(--mith);
+}
+
+.stars {
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 20% 30%, #fff, transparent),
+    radial-gradient(1px 1px at 70% 20%, #cfe0ff, transparent),
+    radial-gradient(1.5px 1.5px at 45% 12%, #fff, transparent),
+    radial-gradient(1px 1px at 85% 40%, #dde8ff, transparent),
+    radial-gradient(1px 1px at 30% 55%, #fff, transparent),
+    radial-gradient(1px 1px at 60% 65%, #bcd0ff, transparent);
+  opacity: 0.5;
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  from { opacity: 0.3; }
+  to { opacity: 0.65; }
+}
+
+/* ---- Doors of Durin (image cross-fade) ---- */
+/* Images are light line-art on black; `screen` blend drops the black so only
+   the glowing lines show over the starry background. */
+.doors {
+  position: absolute;
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(94vw, 400px);
+  aspect-ratio: 1122 / 1402;
+  max-height: 68vh;
+  pointer-events: none;
+}
+.doors-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+.doors-img.idle {
+  opacity: 0.92;
+  animation: shimmer 4.5s ease-in-out infinite alternate;
+}
+.doors-img.active {
+  opacity: 0;
+}
+@keyframes shimmer {
+  from { opacity: 0.7; }
+  to { opacity: 1; }
+}
+/* When opening: keep the silver doors underneath (no dark gap) and light up
+   the glowing blue doors on top. Both use `screen` blend so they add. */
+.lotr-theme.is-open .doors-img.idle {
+  opacity: 0.9;
+  animation: none;
+}
+.lotr-theme.is-open .doors-img.active {
+  opacity: 1;
+  transition: opacity 1.4s ease;
+  animation: doorsPulse 2.6s ease-in-out 1.4s infinite;
+}
+/* brightness pulse (not drop-shadow) so there's no rectangular halo */
+@keyframes doorsPulse {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.35); }
+}
+
+/* ---- Content / controls ---- */
+.lotr-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  width: 100%;
+  max-width: 360px;
+}
+
+.lotr-inscription {
+  font-size: 1.15rem;
+  letter-spacing: 0.14em;
+  color: var(--mith);
+  text-shadow: 0 0 12px var(--mith-glow);
+  margin: 0 0 4px;
+}
+.lotr-inscription.glow {
+  color: var(--gold);
+  text-shadow: 0 0 16px rgba(232, 201, 121, 0.8);
+}
+.lotr-translate {
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  color: #8ba3c9;
+  margin: 0 0 24px;
+  font-style: italic;
+}
+
+.mellon-btn {
+  position: relative;
+  width: 100%;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1.5px solid rgba(188, 212, 255, 0.5);
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(127, 176, 255, 0.22), rgba(10, 16, 30, 0.6));
+  color: var(--mith);
+  font-family: inherit;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  text-shadow: 0 0 14px var(--mith-glow);
+  box-shadow: 0 0 24px -4px var(--mith-glow), inset 0 0 20px rgba(127, 176, 255, 0.15);
+  transition: transform 0.12s ease, box-shadow 0.3s ease;
+  animation: breathe 3.5s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 0 20px -6px var(--mith-glow), inset 0 0 16px rgba(127, 176, 255, 0.12); }
+  50% { box-shadow: 0 0 34px 0 var(--mith-glow), inset 0 0 24px rgba(127, 176, 255, 0.22); }
+}
+.mellon-btn:active {
+  transform: scale(0.97);
+}
+
+.lotr-remaining {
+  margin: 18px 0 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  color: #7e93b8;
+}
+.lotr-error {
+  margin-top: 14px;
+  color: #ff9aa8;
+  font-size: 0.85rem;
+}
+
+.lotr-opening,
+.lotr-closed {
+  animation: fadeUp 0.6s ease;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.lotr-count {
+  font-size: 4rem;
+  font-weight: 700;
+  color: var(--gold);
+  text-shadow: 0 0 24px rgba(232, 201, 121, 0.7);
+  line-height: 1.1;
+  margin: 6px 0;
+}

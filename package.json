@@ -1,0 +1,22 @@
+{
+  "name": "mellon",
+  "version": "1.0.0",
+  "description": "Mellon — mobile-first gate opener napojený na Home Assistant webhook",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev:server": "node --watch --env-file=.env server/index.js",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client install && npm --prefix client run build"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.3.0",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "nanoid": "^5.0.7"
+  }
+}
