@@ -28,6 +28,17 @@ const THEME_RENDERERS = {
       objectPosition="center 30%"
     />
   ),
+  stargate: (g) => (
+    <HpGate
+      {...g}
+      idle="/star-gate.png"
+      active="/star-gate-activated.png"
+      tagline="stargate_tagline"
+      objectPosition="center 42%"
+      buttonKey="stargate_button"
+      variant="sg"
+    />
+  ),
   basic: (g) => <BasicGate {...g} />,
 };
 
@@ -36,6 +47,7 @@ const VISUALS = [
   { code: 'lotr', key: 'theme_lotr' },
   { code: 'hpdoor', key: 'theme_hpdoor' },
   { code: 'hp', key: 'theme_hp' },
+  { code: 'stargate', key: 'theme_stargate' },
   { code: 'basic', key: 'theme_basic' },
 ];
 

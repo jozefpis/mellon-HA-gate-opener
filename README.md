@@ -1,10 +1,17 @@
+<p align="center">
+  <img src="images/doors-of-durin.png" alt="Mellon — Doors of Durin" width="420">
+</p>
+
 # Mellon 🚪
 
 A mobile-first mini app for opening a gate via a **Home Assistant webhook**. An
 admin generates a unique link and sets how many times the gate may be opened.
 Once the limit is reached the button disappears. After a press, a 20-second
-visual "the gate is opening" countdown runs. Two visuals are available:
-**Basic** and **Lord of the Rings** (the Doors of Durin, with a "Mellon" button).
+visual "the gate is opening" countdown runs. Several visuals are available:
+**Basic**, **Lord of the Rings** (the Doors of Durin, "Mellon"),
+**Harry Potter — Fireplace** (Floo powder), **Harry Potter — Door** (Alohomora)
+and **Stargate** (dial the gate). Each opened link also lets the viewer switch
+visual and language.
 
 The usage counter and the webhook URL live **strictly on the server** — the
 limit cannot be bypassed from the browser and the webhook never leaks to the

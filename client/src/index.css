@@ -286,6 +286,10 @@ select {
   color: #8fe6ab;
   border-color: #2f5a3d;
 }
+.link-theme-select.theme-sg {
+  color: #8fd6ff;
+  border-color: #2b4a63;
+}
 .progress {
   height: 8px;
   background: var(--surface-2);

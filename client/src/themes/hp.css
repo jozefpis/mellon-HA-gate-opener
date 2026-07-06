@@ -1,6 +1,7 @@
 .hp-theme {
   --emerald: #6cf29a;
   --emerald-glow: #2fd47f;
+  --sg-rgb: 108, 242, 154; /* accent rgb used in gradients/shadows */
   --gold: #e8c979;
   position: relative;
   min-height: 100dvh;
@@ -80,7 +81,7 @@
   padding: 20px;
   border-radius: 16px;
   border: 1.5px solid rgba(232, 201, 121, 0.55);
-  background: radial-gradient(120% 140% at 50% 0%, rgba(108, 242, 154, 0.22), rgba(8, 14, 10, 0.65));
+  background: radial-gradient(120% 140% at 50% 0%, rgba(var(--sg-rgb), 0.22), rgba(8, 14, 10, 0.65));
   color: #eafff0;
   font-family: inherit;
   font-size: clamp(1.15rem, 6vw, 1.5rem);
@@ -89,13 +90,13 @@
   text-transform: uppercase;
   white-space: nowrap;
   text-shadow: 0 0 14px var(--emerald-glow);
-  box-shadow: 0 0 26px -4px var(--emerald-glow), inset 0 0 20px rgba(108, 242, 154, 0.15);
+  box-shadow: 0 0 26px -4px var(--emerald-glow), inset 0 0 20px rgba(var(--sg-rgb), 0.15);
   transition: transform 0.12s ease, box-shadow 0.3s ease;
   animation: hpBreathe 3.5s ease-in-out infinite;
 }
 @keyframes hpBreathe {
-  0%, 100% { box-shadow: 0 0 20px -6px var(--emerald-glow), inset 0 0 16px rgba(108, 242, 154, 0.12); }
-  50% { box-shadow: 0 0 34px 0 var(--emerald-glow), inset 0 0 24px rgba(108, 242, 154, 0.22); }
+  0%, 100% { box-shadow: 0 0 20px -6px var(--emerald-glow), inset 0 0 16px rgba(var(--sg-rgb), 0.12); }
+  50% { box-shadow: 0 0 34px 0 var(--emerald-glow), inset 0 0 24px rgba(var(--sg-rgb), 0.22); }
 }
 .alohomora-btn:active {
   transform: scale(0.97);
@@ -138,4 +139,11 @@
   text-shadow: 0 0 24px var(--emerald-glow);
   line-height: 1.1;
   margin: 6px 0;
+}
+
+/* Stargate variant — cyan event-horizon palette (chevrons stay gold) */
+.hp-theme.variant-sg {
+  --emerald: #8fe9ff;
+  --emerald-glow: #35c4ff;
+  --sg-rgb: 143, 233, 255;
 }

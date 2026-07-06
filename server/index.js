@@ -23,7 +23,7 @@ const HA_WEBHOOK_METHOD = (process.env.HA_WEBHOOK_METHOD || 'POST').toUpperCase(
 // automation verifies a query parameter (e.g. `{{ 'dev123' in trigger.query }}`).
 // If empty, the webhook is called without any query — assumes HA verifies none.
 const HA_WEBHOOK_QUERY = (process.env.HA_WEBHOOK_QUERY || '').replace(/^\?/, '');
-const THEMES = ['basic', 'lotr', 'hp', 'hpdoor'];
+const THEMES = ['basic', 'lotr', 'hp', 'hpdoor', 'stargate'];
 
 // Supported UI locales; must match the codes in client/src/i18n.jsx.
 const LOCALES = ['en', 'es', 'de', 'sk', 'cs', 'pl', 'zh', 'ja', 'hu'];

@@ -12,6 +12,7 @@ export default function HpGate({
   tagline = 'hp_tagline',
   objectPosition = 'center 40%',
   buttonKey, // translation key for the button; falls back to the "Alohomora" charm
+  variant, // optional color variant class, e.g. 'sg' for the cyan Stargate palette
 }) {
   const { t } = useI18n();
   const buttonLabel = buttonKey ? t(buttonKey) : 'Alohomora';
@@ -20,7 +21,9 @@ export default function HpGate({
   const canPress = status === 'ready';
 
   return (
-    <div className={`hp-theme ${isOpen ? 'is-open' : ''}`}>
+    <div
+      className={`hp-theme ${variant ? `variant-${variant}` : ''} ${isOpen ? 'is-open' : ''}`}
+    >
       <LocaleSwitcher className="on-dark" />
 
       {/* Idle scene cross-fades to the activated (spell-cast) scene on top */}
