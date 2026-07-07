@@ -2,54 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useGate } from '../useGate.js';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
-import BasicGate from '../themes/BasicGate.jsx';
-import LotrGate from '../themes/LotrGate.jsx';
-import HpGate from '../themes/HpGate.jsx';
-
-// Each theme renders its gate component (HP scenes share HpGate with props).
-const THEME_RENDERERS = {
-  lotr: (g) => <LotrGate {...g} />,
-  hp: (g) => (
-    <HpGate
-      {...g}
-      idle="/harry-potter.png"
-      active="/harry-potter-activated.png"
-      tagline="hp_tagline"
-      objectPosition="center 40%"
-      buttonKey="hp_button"
-    />
-  ),
-  hpdoor: (g) => (
-    <HpGate
-      {...g}
-      idle="/harry-potter-1.png"
-      active="/harry-potter-1-activated.png"
-      tagline="hpdoor_tagline"
-      objectPosition="center 30%"
-    />
-  ),
-  stargate: (g) => (
-    <HpGate
-      {...g}
-      idle="/star-gate.png"
-      active="/star-gate-activated.png"
-      tagline="stargate_tagline"
-      objectPosition="center 42%"
-      buttonKey="stargate_button"
-      variant="sg"
-    />
-  ),
-  basic: (g) => <BasicGate {...g} />,
-};
-
-// Visuals the viewer can switch between on the link page.
-const VISUALS = [
-  { code: 'lotr', key: 'theme_lotr' },
-  { code: 'hpdoor', key: 'theme_hpdoor' },
-  { code: 'hp', key: 'theme_hp' },
-  { code: 'stargate', key: 'theme_stargate' },
-  { code: 'basic', key: 'theme_basic' },
-];
+import { THEME_RENDERERS, VISUALS } from '../themes/registry.jsx';
 
 function VisualSwitcher({ value, onChange }) {
   const { t } = useI18n();

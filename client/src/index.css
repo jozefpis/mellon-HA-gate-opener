@@ -86,6 +86,54 @@ select {
   max-width: 46vw;
 }
 
+/* ---------- Preview mode bar (env-gated /preview) ---------- */
+.preview-bar {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--safe-bottom) + 14px);
+  transform: translateX(-50%);
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(10, 16, 30, 0.72);
+  border: 1px solid rgba(188, 212, 255, 0.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  max-width: calc(100vw - 24px);
+}
+.preview-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffd27a;
+  padding: 3px 8px;
+  border: 1px solid rgba(255, 210, 122, 0.5);
+  border-radius: 999px;
+  white-space: nowrap;
+}
+.preview-bar .preview-select {
+  position: static;
+  transform: none;
+  max-width: 42vw;
+}
+.preview-replay {
+  font-size: 0.8rem;
+  color: #bcd4ff;
+  background: rgba(188, 212, 255, 0.12);
+  border: 1px solid rgba(188, 212, 255, 0.35);
+  border-radius: 999px;
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.preview-replay:hover {
+  background: rgba(188, 212, 255, 0.2);
+}
+
 /* ---------- Layout helper ---------- */
 .screen {
   min-height: 100dvh;

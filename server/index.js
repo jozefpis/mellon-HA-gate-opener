@@ -31,6 +31,15 @@ const DEFAULT_LOCALE = LOCALES.includes(process.env.DEFAULT_LOCALE)
   ? process.env.DEFAULT_LOCALE
   : 'en';
 
+// Dry-run switch. When enabled:
+//  - real /g/<token> links behave normally (button, animation, usage counter)
+//    but the webhook is NEVER called, so the physical gate stays shut;
+//  - the client also exposes /preview, a purely client-side simulation of every
+//    visual (no link needed, nothing counted).
+// Lets you test/demo real links and eyeball the animations — even on a live
+// deployment — without opening the gate. Off by default.
+const PREVIEW_MODE = /^(1|true|yes|on)$/i.test(process.env.PREVIEW_MODE || '');
+
 app.set('trust proxy', 1); // behind a reverse proxy (CapRover / Traefik / nginx)
 app.use(express.json());
 app.use(cookieParser());
@@ -49,6 +58,10 @@ function publicLink(row) {
 }
 
 async function callWebhook() {
+  if (PREVIEW_MODE) {
+    console.warn('[webhook] PREVIEW_MODE is on — NOT calling the webhook; the gate stays shut.');
+    return true; // dry-run: real links behave normally but never open the gate
+  }
   if (!HA_WEBHOOK_URL) {
     console.warn('[webhook] HA_WEBHOOK_URL is not set — simulating a successful open.');
     return true; // in dev without Home Assistant we just simulate success
@@ -77,7 +90,7 @@ async function callWebhook() {
 // ---- Public config (read by the client on load) --------------------------
 
 app.get('/api/config', (req, res) => {
-  res.json({ defaultLocale: DEFAULT_LOCALE, locales: LOCALES });
+  res.json({ defaultLocale: DEFAULT_LOCALE, locales: LOCALES, preview: PREVIEW_MODE });
 });
 
 // ---- Health check ---------------------------------------------------------

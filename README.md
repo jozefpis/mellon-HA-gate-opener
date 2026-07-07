@@ -4,7 +4,11 @@
 
 # Mellon 🚪
 
-A mobile-first mini app for opening a gate via a **Home Assistant webhook**. An
+A mobile-first mini app for opening a gate via a **webhook**. It works with
+**any gate, controller or automation that exposes an HTTP webhook** — Home
+Assistant is used throughout this README as the reference example, but anything
+you can trigger with an HTTP request (another automation hub, a custom endpoint,
+an IoT relay, etc.) works just as well. An
 admin generates a unique link and sets how many times the gate may be opened.
 Once the limit is reached the button disappears. After a press, a 20-second
 visual "the gate is opening" countdown runs. Several visuals are available:
@@ -16,6 +20,11 @@ visual and language.
 The usage counter and the webhook URL live **strictly on the server** — the
 limit cannot be bypassed from the browser and the webhook never leaks to the
 client.
+
+> **Self-hosted.** Mellon is a self-hosted app: you run it yourself (Docker,
+> CapRover, bare Node, …) and you expose it so the share links reach visitors'
+> phones. There is no hosted/cloud version — the server, the database and the
+> webhook secret all stay on infrastructure you control.
 
 ## How it works
 
@@ -45,6 +54,7 @@ Copy `.env.example` to `.env` and fill it in. **No secret lives in the code.**
 | `HA_WEBHOOK_METHOD` | Webhook HTTP method (default `POST`) |
 | `HA_WEBHOOK_QUERY` | Optional query string appended to the webhook URL (e.g. `dev123`) — a shared secret verified by the HA automation. Leave empty if HA verifies none. |
 | `DEFAULT_LOCALE` | Default UI language: `en`, `es`, `de`, `sk`, `cs`, `pl`, `zh`, `ja`, `hu` |
+| `PREVIEW_MODE` | If `true`, real links work but **never open the gate** (webhook is not called), and `/preview` is exposed. Off by default. See below. |
 | `DB_PATH` | Path to the SQLite file (default `./data/mellon.db`) |
 | `PORT` | Server port (default `3000`) |
 
@@ -56,6 +66,27 @@ Generate a strong `SESSION_SECRET`:
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 ```
+
+## Preview / dry-run mode
+
+Set `PREVIEW_MODE=true` to turn the whole app into a **dry-run** — ideal for
+testing or demoing on a live deployment without actually opening the gate. It
+does two things:
+
+1. **Real links never open the gate.** A normal `/g/<token>` link still shows
+   the button, plays the full animation and counts the opening — but the server
+   **does not call the webhook**, so the physical gate stays shut. (The usage
+   counter still decrements, so bump a link's openings afterwards if you burned
+   some while testing.)
+2. **Exposes `/preview`.** A page that simulates the open flow **entirely in the
+   browser** (no link needed, nothing counted, no webhook) and lets you switch
+   between all visuals and replay the animation.
+
+When `PREVIEW_MODE` is off (the default), the webhook fires normally and
+`/preview` redirects to `/admin`.
+
+> Remember to turn `PREVIEW_MODE` off once you're done — while it's on, **no
+> link will actually open the gate.**
 
 ---
 
