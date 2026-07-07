@@ -404,6 +404,13 @@ select {
   color: var(--muted);
   margin-top: 40px;
 }
+/* Snorlax blocks the way when a link has been deleted */
+.notfound-img {
+  display: block;
+  width: min(240px, 60vw);
+  height: auto;
+  margin: 0 auto 20px;
+}
 
 .spinner {
   width: 18px;

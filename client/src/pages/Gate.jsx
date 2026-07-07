@@ -52,6 +52,7 @@ export default function Gate() {
       <div className="screen" style={{ justifyContent: 'center', alignItems: 'center' }}>
         <LocaleSwitcher />
         <div className="center-msg">
+          <img className="notfound-img" src="/snorlax.png" alt="" />
           <h1 style={{ fontSize: '1.3rem' }}>{t('gate_notfound_title')}</h1>
           <p>{t('gate_notfound_text')}</p>
         </div>
