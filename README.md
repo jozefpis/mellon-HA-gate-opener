@@ -35,6 +35,25 @@ client.
   20s countdown → done.
 - State is kept in a local **SQLite** database (`data/mellon.db`).
 
+## The visuals
+
+Every link opens with one of five animated scenes. After the press a 20-second
+"the gate is opening" countdown plays; the viewer can also switch the visual and
+the language on the fly.
+
+<table>
+  <tr>
+    <td align="center"><img src="images/opening-lotr.gif" width="210" alt="Lord of the Rings — the Doors of Durin"><br><sub><b>Lord of the Rings</b></sub></td>
+    <td align="center"><img src="images/opening-hp.gif" width="210" alt="Harry Potter — Floo powder fireplace"><br><sub><b>Harry Potter — Fireplace</b></sub></td>
+    <td align="center"><img src="images/opening-hpdoor.gif" width="210" alt="Harry Potter — Alohomora door"><br><sub><b>Harry Potter — Door</b></sub></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="images/opening-stargate.gif" width="210" alt="Stargate — dial the gate"><br><sub><b>Stargate</b></sub></td>
+    <td align="center"><img src="images/opening-basic.gif" width="210" alt="Basic visual"><br><sub><b>Basic</b></sub></td>
+    <td align="center"><img src="images/link-deleted.png" width="210" alt="Deleted link — Snorlax blocks the way"><br><sub><b>Deleted link 💤</b></sub></td>
+  </tr>
+</table>
+
 ## Localization
 
 The UI defaults to **English** and supports: English, Español, Deutsch,
