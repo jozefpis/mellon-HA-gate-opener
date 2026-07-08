@@ -51,10 +51,17 @@ function publicLink(row) {
     token: row.token,
     label: row.label,
     theme: row.theme,
+    // '' means "inherit the server default locale" (client falls back on its own).
+    locale: row.locale || '',
     remaining: Math.max(0, row.max_uses - row.used_count),
     max_uses: row.max_uses,
     active: !!row.active,
   };
+}
+
+// Normalizes a requested locale to a valid code, or '' for "use the default".
+function normalizeLocale(value) {
+  return LOCALES.includes(value) ? value : '';
 }
 
 async function callWebhook() {
@@ -134,6 +141,7 @@ app.get('/api/admin/links', requireAdmin, (req, res) => {
 app.post('/api/admin/links', requireAdmin, (req, res) => {
   const label = String(req.body?.label ?? '').slice(0, 120);
   const theme = THEMES.includes(req.body?.theme) ? req.body.theme : 'basic';
+  const locale = normalizeLocale(req.body?.locale);
   const maxUses = parseInt(req.body?.max_uses, 10);
 
   if (!Number.isInteger(maxUses) || maxUses < 1 || maxUses > 10000) {
@@ -142,9 +150,9 @@ app.post('/api/admin/links', requireAdmin, (req, res) => {
 
   const token = nanoid(12);
   db.prepare(
-    `INSERT INTO links (token, label, theme, max_uses, created_at)
-     VALUES (?, ?, ?, ?, ?)`
-  ).run(token, label, theme, maxUses, new Date().toISOString());
+    `INSERT INTO links (token, label, theme, locale, max_uses, created_at)
+     VALUES (?, ?, ?, ?, ?, ?)`
+  ).run(token, label, theme, locale, maxUses, new Date().toISOString());
 
   const row = db.prepare('SELECT * FROM links WHERE token = ?').get(token);
   res.status(201).json({ ...publicLink(row), used_count: row.used_count, created_at: row.created_at });
@@ -158,6 +166,8 @@ app.patch('/api/admin/links/:token', requireAdmin, (req, res) => {
   const active = typeof req.body?.active === 'boolean' ? (req.body.active ? 1 : 0) : row.active;
   const theme = THEMES.includes(req.body?.theme) ? req.body.theme : row.theme;
   const label = typeof req.body?.label === 'string' ? req.body.label.slice(0, 120) : row.label;
+  // locale: a valid code sets it, '' clears it (inherit default); anything else keeps it.
+  const locale = typeof req.body?.locale === 'string' ? normalizeLocale(req.body.locale) : row.locale;
 
   let maxUses = row.max_uses;
   if (req.body?.max_uses !== undefined) {
@@ -170,8 +180,8 @@ app.patch('/api/admin/links/:token', requireAdmin, (req, res) => {
   }
 
   db.prepare(
-    'UPDATE links SET active = ?, theme = ?, label = ?, max_uses = ? WHERE token = ?'
-  ).run(active, theme, label, maxUses, req.params.token);
+    'UPDATE links SET active = ?, theme = ?, label = ?, locale = ?, max_uses = ? WHERE token = ?'
+  ).run(active, theme, label, locale, maxUses, req.params.token);
   const updated = db.prepare('SELECT * FROM links WHERE token = ?').get(req.params.token);
   res.json({ ...publicLink(updated), used_count: updated.used_count, created_at: updated.created_at });
 });

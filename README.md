@@ -61,6 +61,12 @@ Slovenčina, Čeština, Polski, 中文, 日本語, Magyar. Users can switch lang
 the selector in the top-right corner. The default language is set via the
 `DEFAULT_LOCALE` env variable.
 
+**Per-link language.** Each link can also be pinned to a specific language,
+overriding the default — pick it when generating the link (or change it later
+from the admin list). A pinned link opens in that language regardless of the
+viewer's own preference; leave it on *Default* to fall back to `DEFAULT_LOCALE`.
+The viewer can still switch language afterwards.
+
 ## Configuration (env variables)
 
 Copy `.env.example` to `.env` and fill it in. **No secret lives in the code.**

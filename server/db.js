@@ -34,4 +34,11 @@ db.exec(`
   );
 `);
 
+// ---- Migrations -----------------------------------------------------------
+// Per-link locale override. Empty string means "inherit the server default".
+const linkCols = db.prepare(`PRAGMA table_info(links)`).all().map((c) => c.name);
+if (!linkCols.includes('locale')) {
+  db.exec(`ALTER TABLE links ADD COLUMN locale TEXT NOT NULL DEFAULT ''`);
+}
+
 export default db;

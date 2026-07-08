@@ -325,6 +325,13 @@ select {
   border-color: #5a4d24;
 }
 /* Editable theme selector on a link (looks like the badge) */
+.link-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+  flex-shrink: 0;
+}
 .link-theme-select {
   font-size: 0.75rem;
   padding: 4px 22px 4px 10px;

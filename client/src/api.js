@@ -24,6 +24,7 @@ export const api = {
   createLink: (payload) => req('POST', '/api/admin/links', payload),
   setActive: (token, active) => req('PATCH', `/api/admin/links/${token}`, { active }),
   setTheme: (token, theme) => req('PATCH', `/api/admin/links/${token}`, { theme }),
+  setLocale: (token, locale) => req('PATCH', `/api/admin/links/${token}`, { locale }),
   setLabel: (token, label) => req('PATCH', `/api/admin/links/${token}`, { label }),
   setMaxUses: (token, max_uses) => req('PATCH', `/api/admin/links/${token}`, { max_uses }),
   deleteLink: (token) => req('DELETE', `/api/admin/links/${token}`),

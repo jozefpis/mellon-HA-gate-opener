@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
-import { useI18n, LocaleSwitcher } from '../i18n.jsx';
+import { useI18n, LocaleSwitcher, LOCALES } from '../i18n.jsx';
 
 export default function Admin() {
   const { t } = useI18n();
@@ -84,6 +84,7 @@ function Dashboard({ onLogout }) {
   const [label, setLabel] = useState('');
   const [maxUses, setMaxUses] = useState('5');
   const [theme, setTheme] = useState('lotr');
+  const [linkLocale, setLinkLocale] = useState(''); // '' = inherit the default
   const [creating, setCreating] = useState(false);
   const [error, setError] = useState('');
 
@@ -111,7 +112,7 @@ function Dashboard({ onLogout }) {
     }
     setCreating(true);
     try {
-      await api.createLink({ label: label.trim(), max_uses: n, theme });
+      await api.createLink({ label: label.trim(), max_uses: n, theme, locale: linkLocale });
       setLabel('');
       setMaxUses('5');
       await refresh();
@@ -173,6 +174,17 @@ function Dashboard({ onLogout }) {
               <option value="basic">{t('theme_basic')}</option>
             </select>
           </div>
+        </div>
+        <div className="field">
+          <label>{t('admin_language')}</label>
+          <select value={linkLocale} onChange={(e) => setLinkLocale(e.target.value)}>
+            <option value="">{t('admin_language_default')}</option>
+            {LOCALES.map((l) => (
+              <option key={l.code} value={l.code}>
+                {l.name}
+              </option>
+            ))}
+          </select>
         </div>
         <button className="btn" disabled={creating}>
           {creating ? t('admin_generating') : t('admin_generate')}
@@ -272,26 +284,41 @@ function LinkItem({ link, onChange }) {
             {new Date(link.created_at).toLocaleString(locale)}
           </div>
         </div>
-        <select
-          className={`link-theme-select ${
-            link.theme === 'lotr'
-              ? 'theme-lotr'
-              : link.theme === 'hp' || link.theme === 'hpdoor'
-              ? 'theme-hp'
-              : link.theme === 'stargate'
-              ? 'theme-sg'
-              : ''
-          }`}
-          value={link.theme}
-          onChange={(e) => api.setTheme(link.token, e.target.value).then(onChange)}
-          aria-label={t('admin_theme')}
-        >
-          <option value="lotr">{t('theme_lotr')}</option>
-          <option value="hpdoor">{t('theme_hpdoor')}</option>
-          <option value="hp">{t('theme_hp')}</option>
-          <option value="stargate">{t('theme_stargate')}</option>
-          <option value="basic">{t('theme_basic')}</option>
-        </select>
+        <div className="link-selects">
+          <select
+            className={`link-theme-select ${
+              link.theme === 'lotr'
+                ? 'theme-lotr'
+                : link.theme === 'hp' || link.theme === 'hpdoor'
+                ? 'theme-hp'
+                : link.theme === 'stargate'
+                ? 'theme-sg'
+                : ''
+            }`}
+            value={link.theme}
+            onChange={(e) => api.setTheme(link.token, e.target.value).then(onChange)}
+            aria-label={t('admin_theme')}
+          >
+            <option value="lotr">{t('theme_lotr')}</option>
+            <option value="hpdoor">{t('theme_hpdoor')}</option>
+            <option value="hp">{t('theme_hp')}</option>
+            <option value="stargate">{t('theme_stargate')}</option>
+            <option value="basic">{t('theme_basic')}</option>
+          </select>
+          <select
+            className="link-theme-select"
+            value={link.locale || ''}
+            onChange={(e) => api.setLocale(link.token, e.target.value).then(onChange)}
+            aria-label={t('admin_language')}
+          >
+            <option value="">{t('admin_language_default')}</option>
+            {LOCALES.map((l) => (
+              <option key={l.code} value={l.code}>
+                {l.name}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       <div className="progress">

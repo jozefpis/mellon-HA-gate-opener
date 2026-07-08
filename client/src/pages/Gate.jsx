@@ -24,7 +24,7 @@ function VisualSwitcher({ value, onChange }) {
 
 export default function Gate() {
   const { token } = useParams();
-  const { t } = useI18n();
+  const { t, setLocale } = useI18n();
   const gate = useGate(token);
   // Per-viewer visual override for this link (persisted per token).
   const [override, setOverride] = useState(null);
@@ -33,6 +33,12 @@ export default function Gate() {
     const saved = localStorage.getItem(`mellon_theme_${token}`);
     if (saved && THEME_RENDERERS[saved]) setOverride(saved);
   }, [token]);
+
+  // If this link was created with a forced language, show it in that language.
+  // (The viewer can still switch afterwards via the language selector.)
+  useEffect(() => {
+    if (gate.link?.locale) setLocale(gate.link.locale);
+  }, [gate.link?.locale, setLocale]);
 
   function chooseVisual(v) {
     setOverride(v);
