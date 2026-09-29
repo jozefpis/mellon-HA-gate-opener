@@ -39,14 +39,6 @@
   transition: opacity 1.4s ease;
   animation: hpFlames 2.4s ease-in-out 1.4s infinite;
 }
-/* Video scenes: each video stays hidden over the still until it is actually
-   playing (the loop's first frame matches the intro's last, so swaps are invisible). */
-.hp-video {
-  opacity: 0;
-}
-.hp-video.on {
-  opacity: 1;
-}
 @keyframes hpFlames {
   0%, 100% { filter: brightness(1); }
   50% { filter: brightness(1.22); }

@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
+import SceneVideo from './SceneVideo.jsx';
 import './hp.css';
 
 export default function HpGate({
@@ -21,7 +21,6 @@ export default function HpGate({
   const remaining = link?.remaining ?? 0;
   const isOpen = status === 'opening' || status === 'success';
   const canPress = status === 'ready';
-  const { introRef, loopRef, introPlaying, looping, stillOnly } = useSceneVideo(video, isOpen);
 
   return (
     <div
@@ -32,33 +31,7 @@ export default function HpGate({
       {/* Idle scene cross-fades to the activated (spell-cast) scene on top */}
       <div className="hp-bg" aria-hidden>
         {video ? (
-          <>
-            {/* The still stays underneath so nothing flashes while a video starts */}
-            <img className="hp-img" src={video.poster} alt="" style={{ objectPosition }} />
-            {/* Intro plays once on open, then hands over to a seamless loop */}
-            <video
-              ref={introRef}
-              className={`hp-img hp-video ${introPlaying ? 'on' : ''}`}
-              src={video.intro}
-              muted
-              playsInline
-              preload="auto"
-              style={{ objectPosition }}
-            />
-            <video
-              ref={loopRef}
-              className={`hp-img hp-video ${looping ? 'on' : ''}`}
-              src={video.loop}
-              muted
-              playsInline
-              loop
-              preload="auto"
-              style={{ objectPosition }}
-            />
-            {stillOnly && (
-              <img className="hp-img" src={video.openStill} alt="" style={{ objectPosition }} />
-            )}
-          </>
+          <SceneVideo video={video} isOpen={isOpen} className="hp-img" style={{ objectPosition }} />
         ) : (
           <>
             <img className="hp-img idle" src={idle} alt="" style={{ objectPosition }} />
@@ -122,45 +95,3 @@ export default function HpGate({
   );
 }
 
-// Drives the intro → loop video pair. If playback is refused (e.g. iOS Low
-// Power Mode blocks even muted autoplay) it falls back to a still of the open gate.
-function useSceneVideo(video, isOpen) {
-  const introRef = useRef(null);
-  const loopRef = useRef(null);
-  const [introPlaying, setIntroPlaying] = useState(false);
-  const [looping, setLooping] = useState(false);
-  const [stillOnly, setStillOnly] = useState(false);
-
-  useEffect(() => {
-    const intro = introRef.current;
-    const loop = loopRef.current;
-    if (!video || !intro || !loop) return;
-    if (!isOpen) {
-      intro.pause();
-      loop.pause();
-      intro.currentTime = 0;
-      setIntroPlaying(false);
-      setLooping(false);
-      setStillOnly(false);
-      return;
-    }
-    // Reveal each video only once it is really rendering frames
-    const showIntro = () => setIntroPlaying(true);
-    const showLoop = () => setLooping(true);
-    const toLoop = () => {
-      loop.currentTime = 0;
-      loop.play().catch(() => setStillOnly(true));
-    };
-    intro.addEventListener('playing', showIntro);
-    intro.addEventListener('ended', toLoop);
-    loop.addEventListener('playing', showLoop);
-    intro.play().catch(() => setStillOnly(true));
-    return () => {
-      intro.removeEventListener('playing', showIntro);
-      intro.removeEventListener('ended', toLoop);
-      loop.removeEventListener('playing', showLoop);
-    };
-  }, [video, isOpen]);
-
-  return { introRef, loopRef, introPlaying, looping, stillOnly };
-}

@@ -134,6 +134,16 @@ select {
   background: rgba(188, 212, 255, 0.2);
 }
 
+/* ---------- Animated gate scenes (SceneVideo) ---------- */
+/* One layer visible at a time; the loop's first frame matches the intro's
+   last (and the poster the intro's first), so swaps are invisible. */
+.scene-layer {
+  opacity: 0;
+}
+.scene-layer.on {
+  opacity: 1;
+}
+
 /* ---------- Layout helper ---------- */
 .screen {
   min-height: 100dvh;

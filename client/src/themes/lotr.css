@@ -34,8 +34,8 @@
   to { opacity: 0.65; }
 }
 
-/* ---- Doors of Durin (image cross-fade) ---- */
-/* Images are light line-art on black; `screen` blend drops the black so only
+/* ---- Doors of Durin (animated scene, see SceneVideo) ---- */
+/* Frames are light line-art on black; `screen` blend drops the black so only
    the glowing lines show over the starry background. */
 .doors {
   position: absolute;
@@ -54,33 +54,6 @@
   height: 100%;
   object-fit: contain;
   mix-blend-mode: screen;
-}
-.doors-img.idle {
-  opacity: 0.92;
-  animation: shimmer 4.5s ease-in-out infinite alternate;
-}
-.doors-img.active {
-  opacity: 0;
-}
-@keyframes shimmer {
-  from { opacity: 0.7; }
-  to { opacity: 1; }
-}
-/* When opening: keep the silver doors underneath (no dark gap) and light up
-   the glowing blue doors on top. Both use `screen` blend so they add. */
-.lotr-theme.is-open .doors-img.idle {
-  opacity: 0.9;
-  animation: none;
-}
-.lotr-theme.is-open .doors-img.active {
-  opacity: 1;
-  transition: opacity 1.4s ease;
-  animation: doorsPulse 2.6s ease-in-out 1.4s infinite;
-}
-/* brightness pulse (not drop-shadow) so there's no rectangular halo */
-@keyframes doorsPulse {
-  0%, 100% { filter: brightness(1); }
-  50% { filter: brightness(1.35); }
 }
 
 /* ---- Content / controls ---- */

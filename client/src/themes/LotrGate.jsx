@@ -1,5 +1,16 @@
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
+import SceneVideo from './SceneVideo.jsx';
 import './lotr.css';
+
+// Ithildin reveal: strokes light up from the pillar bases, the inscription is
+// written, the pillars fill with starlight, then a looping glow. Rendered on
+// black so the `screen` blend leaves only the light over the starry sky.
+const DOORS_VIDEO = {
+  intro: '/lotr-intro.mp4',
+  loop: '/lotr-loop.mp4',
+  poster: '/lotr-poster.jpg',
+  openStill: '/lotr-open.jpg',
+};
 
 export default function LotrGate({ link, status, countdown, error, open }) {
   const { t } = useI18n();
@@ -13,10 +24,8 @@ export default function LotrGate({ link, status, countdown, error, open }) {
       <LocaleSwitcher className="on-dark" />
       <div className="stars" aria-hidden />
 
-      {/* Doors of Durin: idle (silver) cross-fades to activated (glowing blue) */}
       <div className="doors" aria-hidden>
-        <img className="doors-img idle" src="/doors-of-durin.png" alt="" />
-        <img className="doors-img active" src="/doors-of-durin-activated.png" alt="" />
+        <SceneVideo video={DOORS_VIDEO} isOpen={isOpen} className="doors-img" />
       </div>
 
       <div className="lotr-content">
