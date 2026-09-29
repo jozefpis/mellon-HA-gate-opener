@@ -18,6 +18,14 @@ const FIREPLACE_VIDEO = {
   openStill: '/hp-open.jpg',
 };
 
+// Alohomora: a wand unlocks the rings and the doors swing open onto golden light.
+const DOOR_VIDEO = {
+  intro: '/hpdoor-intro.mp4',
+  loop: '/hpdoor-loop.mp4',
+  poster: '/hpdoor-poster.jpg',
+  openStill: '/hpdoor-open.jpg',
+};
+
 // Each theme renders its gate component (HP scenes share HpGate with props).
 // `g` is the gate state from useGate: { link, status, countdown, error, open }.
 export const THEME_RENDERERS = {
@@ -35,8 +43,7 @@ export const THEME_RENDERERS = {
   hpdoor: (g) => (
     <HpGate
       {...g}
-      idle="/harry-potter-1.png"
-      active="/harry-potter-1-activated.png"
+      video={DOOR_VIDEO}
       tagline="hpdoor_tagline"
       objectPosition="center 30%"
     />
