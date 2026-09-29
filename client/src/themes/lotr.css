@@ -36,7 +36,9 @@
 
 /* ---- Doors of Durin (animated scene, see SceneVideo) ---- */
 /* Frames are light line-art on black; `screen` blend drops the black so only
-   the glowing lines show over the starry background. */
+   the glowing lines show over the starry background. The blend sits on the
+   container: its transform makes it a stacking context, so a blend on the
+   children would only mix with the empty box and leave a black rectangle. */
 .doors {
   position: absolute;
   top: 2%;
@@ -46,6 +48,7 @@
   aspect-ratio: 1122 / 1402;
   max-height: 68vh;
   pointer-events: none;
+  mix-blend-mode: screen;
 }
 .doors-img {
   position: absolute;
@@ -53,7 +56,6 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  mix-blend-mode: screen;
 }
 
 /* ---- Content / controls ---- */
