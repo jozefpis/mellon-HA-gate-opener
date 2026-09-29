@@ -10,6 +10,14 @@ const STARGATE_VIDEO = {
   openStill: '/stargate-open.jpg',
 };
 
+// Floo fireplace: a handful of powder, the fire roars green (simulated flames).
+const FIREPLACE_VIDEO = {
+  intro: '/hp-intro.mp4',
+  loop: '/hp-loop.mp4',
+  poster: '/hp-poster.jpg',
+  openStill: '/hp-open.jpg',
+};
+
 // Each theme renders its gate component (HP scenes share HpGate with props).
 // `g` is the gate state from useGate: { link, status, countdown, error, open }.
 export const THEME_RENDERERS = {
@@ -17,11 +25,11 @@ export const THEME_RENDERERS = {
   hp: (g) => (
     <HpGate
       {...g}
-      idle="/harry-potter.png"
-      active="/harry-potter-activated.png"
+      video={FIREPLACE_VIDEO}
       tagline="hp_tagline"
       objectPosition="center 40%"
       buttonKey="hp_button"
+      variant="fire"
     />
   ),
   hpdoor: (g) => (
