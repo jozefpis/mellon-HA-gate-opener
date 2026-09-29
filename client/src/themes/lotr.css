@@ -35,19 +35,26 @@
 }
 
 /* ---- Doors of Durin (animated scene, see SceneVideo) ---- */
+/* The doors sit centred in the free space between the language switcher and
+   the controls, so they never cling to the top and never overlap the button. */
+.doors-stage {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(env(safe-area-inset-top, 0px) + 52px) 0 12px;
+  pointer-events: none;
+}
 /* Frames are light line-art on black; `screen` blend drops the black so only
    the glowing lines show over the starry background. The blend sits on the
-   container: its transform makes it a stacking context, so a blend on the
-   children would only mix with the empty box and leave a black rectangle. */
+   container (a blend on the children would only mix with the empty box). */
 .doors {
-  position: absolute;
-  top: 2%;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   width: min(94vw, 400px);
   aspect-ratio: 1122 / 1402;
-  max-height: 68vh;
-  pointer-events: none;
+  max-height: 100%;
   mix-blend-mode: screen;
 }
 .doors-img {

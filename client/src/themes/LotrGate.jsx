@@ -24,8 +24,10 @@ export default function LotrGate({ link, status, countdown, error, open }) {
       <LocaleSwitcher className="on-dark" />
       <div className="stars" aria-hidden />
 
-      <div className="doors" aria-hidden>
-        <SceneVideo video={DOORS_VIDEO} isOpen={isOpen} className="doors-img" />
+      <div className="doors-stage" aria-hidden>
+        <div className="doors">
+          <SceneVideo video={DOORS_VIDEO} isOpen={isOpen} className="doors-img" />
+        </div>
       </div>
 
       <div className="lotr-content">
