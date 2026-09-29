@@ -72,6 +72,12 @@
   text-align: center;
   width: 100%;
   max-width: 360px;
+  /* Same height in every state (button, spinner, countdown…), bottom-aligned,
+     so the doors above don't jump when the state changes. */
+  min-height: 10.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .lotr-inscription {
