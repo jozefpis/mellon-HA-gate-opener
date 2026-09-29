@@ -58,7 +58,17 @@ export default function Gate() {
       <div className="screen" style={{ justifyContent: 'center', alignItems: 'center' }}>
         <LocaleSwitcher />
         <div className="center-msg">
-          <img className="notfound-img" src="/snorlax.png" alt="" />
+          {/* Snorlax sleeps in front of the gate: breathing, drifting Z's (seamless loop) */}
+          <video
+            className="notfound-img"
+            src="/snorlax.mp4"
+            poster="/snorlax-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            aria-hidden
+          />
           <h1 style={{ fontSize: '1.3rem' }}>{t('gate_notfound_title')}</h1>
           <p>{t('gate_notfound_text')}</p>
         </div>

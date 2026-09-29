@@ -50,7 +50,7 @@ the language on the fly.
   <tr>
     <td align="center"><img src="images/opening-stargate.gif" width="210" alt="Stargate — dial the gate"><br><sub><b>Stargate</b></sub></td>
     <td align="center"><img src="images/opening-basic.gif" width="210" alt="Basic visual"><br><sub><b>Basic</b></sub></td>
-    <td align="center"><img src="images/link-deleted.png" width="210" alt="Deleted link — Snorlax blocks the way"><br><sub><b>Deleted link 💤</b></sub></td>
+    <td align="center"><img src="images/link-deleted.gif" width="210" alt="Deleted link — Snorlax blocks the way"><br><sub><b>Deleted link 💤</b></sub></td>
   </tr>
 </table>
 
