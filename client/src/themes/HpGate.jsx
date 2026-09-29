@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
 import './hp.css';
 
@@ -13,12 +14,14 @@ export default function HpGate({
   objectPosition = 'center 40%',
   buttonKey, // translation key for the button; falls back to the "Alohomora" charm
   variant, // optional color variant class, e.g. 'sg' for the cyan Stargate palette
+  video, // optional { intro, loop, poster, openStill }: animated scene instead of the image pair
 }) {
   const { t } = useI18n();
   const buttonLabel = buttonKey ? t(buttonKey) : 'Alohomora';
   const remaining = link?.remaining ?? 0;
   const isOpen = status === 'opening' || status === 'success';
   const canPress = status === 'ready';
+  const { introRef, loopRef, looping, stillOnly } = useSceneVideo(video, isOpen);
 
   return (
     <div
@@ -28,8 +31,39 @@ export default function HpGate({
 
       {/* Idle scene cross-fades to the activated (spell-cast) scene on top */}
       <div className="hp-bg" aria-hidden>
-        <img className="hp-img idle" src={idle} alt="" style={{ objectPosition }} />
-        <img className="hp-img active" src={active} alt="" style={{ objectPosition }} />
+        {video ? (
+          <>
+            {/* Intro plays once on open, then hands over to a seamless loop */}
+            <video
+              ref={introRef}
+              className="hp-img"
+              src={video.intro}
+              poster={video.poster}
+              muted
+              playsInline
+              preload="auto"
+              style={{ objectPosition }}
+            />
+            <video
+              ref={loopRef}
+              className={`hp-img hp-loop ${looping ? 'on' : ''}`}
+              src={video.loop}
+              muted
+              playsInline
+              loop
+              preload="auto"
+              style={{ objectPosition }}
+            />
+            {stillOnly && (
+              <img className="hp-img" src={video.openStill} alt="" style={{ objectPosition }} />
+            )}
+          </>
+        ) : (
+          <>
+            <img className="hp-img idle" src={idle} alt="" style={{ objectPosition }} />
+            <img className="hp-img active" src={active} alt="" style={{ objectPosition }} />
+          </>
+        )}
       </div>
       <div className="hp-scrim" aria-hidden />
 
@@ -85,4 +119,37 @@ export default function HpGate({
       </div>
     </div>
   );
+}
+
+// Drives the intro → loop video pair. If playback is refused (e.g. iOS Low
+// Power Mode blocks even muted autoplay) it falls back to a still of the open gate.
+function useSceneVideo(video, isOpen) {
+  const introRef = useRef(null);
+  const loopRef = useRef(null);
+  const [looping, setLooping] = useState(false);
+  const [stillOnly, setStillOnly] = useState(false);
+
+  useEffect(() => {
+    const intro = introRef.current;
+    const loop = loopRef.current;
+    if (!video || !intro || !loop) return;
+    if (!isOpen) {
+      intro.pause();
+      loop.pause();
+      intro.currentTime = 0;
+      setLooping(false);
+      setStillOnly(false);
+      return;
+    }
+    const toLoop = () => {
+      loop.currentTime = 0;
+      loop.play().catch(() => setStillOnly(true));
+      setLooping(true);
+    };
+    intro.addEventListener('ended', toLoop);
+    intro.play().catch(() => setStillOnly(true));
+    return () => intro.removeEventListener('ended', toLoop);
+  }, [video, isOpen]);
+
+  return { introRef, loopRef, looping, stillOnly };
 }

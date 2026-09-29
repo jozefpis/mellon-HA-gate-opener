@@ -2,6 +2,14 @@ import BasicGate from './BasicGate.jsx';
 import LotrGate from './LotrGate.jsx';
 import HpGate from './HpGate.jsx';
 
+// Stargate dial-in: chevrons lock one by one, kawoosh, then a looping horizon.
+const STARGATE_VIDEO = {
+  intro: '/stargate-intro.mp4',
+  loop: '/stargate-loop.mp4',
+  poster: '/stargate-poster.jpg',
+  openStill: '/stargate-open.jpg',
+};
+
 // Each theme renders its gate component (HP scenes share HpGate with props).
 // `g` is the gate state from useGate: { link, status, countdown, error, open }.
 export const THEME_RENDERERS = {
@@ -28,8 +36,7 @@ export const THEME_RENDERERS = {
   stargate: (g) => (
     <HpGate
       {...g}
-      idle="/star-gate.png"
-      active="/star-gate-activated.png"
+      video={STARGATE_VIDEO}
       tagline="stargate_tagline"
       objectPosition="center 42%"
       buttonKey="stargate_button"
