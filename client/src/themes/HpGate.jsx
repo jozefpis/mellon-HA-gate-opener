@@ -21,7 +21,7 @@ export default function HpGate({
   const remaining = link?.remaining ?? 0;
   const isOpen = status === 'opening' || status === 'success';
   const canPress = status === 'ready';
-  const { introRef, loopRef, looping, stillOnly } = useSceneVideo(video, isOpen);
+  const { introRef, loopRef, introPlaying, looping, stillOnly } = useSceneVideo(video, isOpen);
 
   return (
     <div
@@ -33,12 +33,13 @@ export default function HpGate({
       <div className="hp-bg" aria-hidden>
         {video ? (
           <>
+            {/* The still stays underneath so nothing flashes while a video starts */}
+            <img className="hp-img" src={video.poster} alt="" style={{ objectPosition }} />
             {/* Intro plays once on open, then hands over to a seamless loop */}
             <video
               ref={introRef}
-              className="hp-img"
+              className={`hp-img hp-video ${introPlaying ? 'on' : ''}`}
               src={video.intro}
-              poster={video.poster}
               muted
               playsInline
               preload="auto"
@@ -46,7 +47,7 @@ export default function HpGate({
             />
             <video
               ref={loopRef}
-              className={`hp-img hp-loop ${looping ? 'on' : ''}`}
+              className={`hp-img hp-video ${looping ? 'on' : ''}`}
               src={video.loop}
               muted
               playsInline
@@ -126,6 +127,7 @@ export default function HpGate({
 function useSceneVideo(video, isOpen) {
   const introRef = useRef(null);
   const loopRef = useRef(null);
+  const [introPlaying, setIntroPlaying] = useState(false);
   const [looping, setLooping] = useState(false);
   const [stillOnly, setStillOnly] = useState(false);
 
@@ -137,19 +139,28 @@ function useSceneVideo(video, isOpen) {
       intro.pause();
       loop.pause();
       intro.currentTime = 0;
+      setIntroPlaying(false);
       setLooping(false);
       setStillOnly(false);
       return;
     }
+    // Reveal each video only once it is really rendering frames
+    const showIntro = () => setIntroPlaying(true);
+    const showLoop = () => setLooping(true);
     const toLoop = () => {
       loop.currentTime = 0;
       loop.play().catch(() => setStillOnly(true));
-      setLooping(true);
     };
+    intro.addEventListener('playing', showIntro);
     intro.addEventListener('ended', toLoop);
+    loop.addEventListener('playing', showLoop);
     intro.play().catch(() => setStillOnly(true));
-    return () => intro.removeEventListener('ended', toLoop);
+    return () => {
+      intro.removeEventListener('playing', showIntro);
+      intro.removeEventListener('ended', toLoop);
+      loop.removeEventListener('playing', showLoop);
+    };
   }, [video, isOpen]);
 
-  return { introRef, loopRef, looping, stillOnly };
+  return { introRef, loopRef, introPlaying, looping, stillOnly };
 }
