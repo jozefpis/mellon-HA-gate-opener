@@ -1,8 +1,7 @@
 import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 // Compact Spotify embed driven by the Spotify iFrame API. The embed loads with
-// the page (hidden until `visible`) so that `start()` can play it straight from
-// the click; playback jumps to `startAt` seconds and pauses at `stopAt` (if set).
+// the page so that `start()` can play it straight from the click; playback jumps to `startAt` seconds and pauses at `stopAt` (if set).
 //
 // Browsers only let the embed make sound in response to a user gesture, so call
 // start() from the click handler. Listeners who aren't logged in to Spotify in
@@ -23,7 +22,7 @@ function loadSpotifyApi() {
   return apiPromise;
 }
 
-const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stopAt, visible, className }, ref) {
+const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stopAt, className }, ref) {
   const hostRef = useRef(null);
   const ctrlRef = useRef(null);
   const wantRef = useRef(false); // start() was called (maybe before the embed was ready)
@@ -76,7 +75,7 @@ const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stop
     },
   }));
 
-  return <div ref={hostRef} className={`${className || ''} ${visible ? 'on' : ''}`} />;
+  return <div ref={hostRef} className={className} />;
 });
 
 export default SpotifyPlayer;

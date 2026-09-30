@@ -52,7 +52,6 @@ export default function LotrGate({ link, status, countdown, error, open }) {
         uri={OPENING_TRACK.uri}
         startAt={OPENING_TRACK.startAt}
         stopAt={OPENING_TRACK.stopAt}
-        visible={isOpen || status === 'sending'}
         className="lotr-music"
       />
 
