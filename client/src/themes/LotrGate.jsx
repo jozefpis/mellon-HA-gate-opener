@@ -1,5 +1,7 @@
+import { useEffect, useRef } from 'react';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
 import SceneVideo from './SceneVideo.jsx';
+import SpotifyPlayer from './SpotifyPlayer.jsx';
 import './lotr.css';
 
 // Ithildin reveal: strokes light up from the pillar bases, the inscription is
@@ -12,12 +14,26 @@ const DOORS_VIDEO = {
   openStill: '/lotr-open.jpg',
 };
 
+// Music for the opening: starts on "Mellon" and jumps to 0:27.
+const OPENING_TRACK = { uri: 'spotify:track:644es5aYPJghtZLjM1rmSP', startAt: 27 };
+
 export default function LotrGate({ link, status, countdown, error, open }) {
   const { t } = useI18n();
   const remaining = link?.remaining ?? 0;
   const isOpen = status === 'opening' || status === 'success';
   const canPress = status === 'ready';
   const closed = status === 'limit' || status === 'disabled';
+  const music = useRef(null);
+
+  // the open request failed (back to the button) or was refused: stop the music
+  useEffect(() => {
+    if (status === 'ready' || closed) music.current?.stop();
+  }, [status, closed]);
+
+  const speak = () => {
+    music.current?.start(); // inside the click, so the browser lets it play
+    open();
+  };
 
   return (
     <div className={`lotr-theme ${isOpen ? 'is-open' : ''}`}>
@@ -30,11 +46,19 @@ export default function LotrGate({ link, status, countdown, error, open }) {
         </div>
       </div>
 
+      <SpotifyPlayer
+        ref={music}
+        uri={OPENING_TRACK.uri}
+        startAt={OPENING_TRACK.startAt}
+        visible={isOpen || status === 'sending'}
+        className="lotr-music"
+      />
+
       <div className="lotr-content">
         {canPress && (
           <>
             <p className="lotr-translate">{t('lotr_translate')}</p>
-            <button className="mellon-btn" onClick={open}>
+            <button className="mellon-btn" onClick={speak}>
               <span>Mellon</span>
             </button>
             <p className="lotr-remaining">{t('lotr_remaining', { n: remaining })}</p>
