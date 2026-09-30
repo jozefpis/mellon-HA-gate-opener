@@ -153,6 +153,13 @@
   margin: 6px 0;
 }
 
+/* TARDIS variant — police-box blue with a warm console-room glow */
+.hp-theme.variant-tardis {
+  --emerald: #cfe0ff;
+  --emerald-glow: #3d7dff;
+  --sg-rgb: 140, 180, 255;
+}
+
 /* Stargate variant — cyan event-horizon palette (chevrons stay gold) */
 .hp-theme.variant-sg {
   --emerald: #8fe9ff;

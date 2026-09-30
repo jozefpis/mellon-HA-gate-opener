@@ -171,6 +171,7 @@ function Dashboard({ onLogout }) {
               <option value="hpdoor">{t('theme_hpdoor')}</option>
               <option value="hp">{t('theme_hp')}</option>
               <option value="stargate">{t('theme_stargate')}</option>
+              <option value="tardis">{t('theme_tardis')}</option>
               <option value="basic">{t('theme_basic')}</option>
             </select>
           </div>
@@ -293,6 +294,8 @@ function LinkItem({ link, onChange }) {
                 ? 'theme-hp'
                 : link.theme === 'stargate'
                 ? 'theme-sg'
+                : link.theme === 'tardis'
+                ? 'theme-tardis'
                 : ''
             }`}
             value={link.theme}
@@ -303,6 +306,7 @@ function LinkItem({ link, onChange }) {
             <option value="hpdoor">{t('theme_hpdoor')}</option>
             <option value="hp">{t('theme_hp')}</option>
             <option value="stargate">{t('theme_stargate')}</option>
+            <option value="tardis">{t('theme_tardis')}</option>
             <option value="basic">{t('theme_basic')}</option>
           </select>
           <select

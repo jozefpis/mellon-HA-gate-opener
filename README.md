@@ -13,8 +13,8 @@ admin generates a unique link and sets how many times the gate may be opened.
 Once the limit is reached the button disappears. After a press, a 20-second
 visual "the gate is opening" countdown runs. Several visuals are available:
 **Basic**, **Lord of the Rings** (the Doors of Durin, "Mellon"),
-**Harry Potter — Fireplace** (Floo powder), **Harry Potter — Door** (Alohomora)
-and **Stargate** (dial the gate). Each opened link also lets the viewer switch
+**Harry Potter — Fireplace** (Floo powder), **Harry Potter — Door** (Alohomora),
+**Stargate** (dial the gate) and **Doctor Who — TARDIS** (Allons-y!). Each opened link also lets the viewer switch
 visual and language.
 
 The usage counter and the webhook URL live **strictly on the server** — the
@@ -37,7 +37,7 @@ client.
 
 ## The visuals
 
-Every link opens with one of five animated scenes. After the press a 20-second
+Every link opens with one of six animated scenes. After the press a 20-second
 "the gate is opening" countdown plays; the viewer can also switch the visual and
 the language on the fly.
 
@@ -49,10 +49,19 @@ the language on the fly.
   </tr>
   <tr>
     <td align="center"><img src="images/opening-stargate.gif" width="210" alt="Stargate — dial the gate"><br><sub><b>Stargate</b></sub></td>
+    <td align="center"><img src="images/opening-tardis.gif" width="210" alt="Doctor Who — the TARDIS"><br><sub><b>Doctor Who — TARDIS</b></sub></td>
     <td align="center"><img src="images/opening-basic.gif" width="210" alt="Basic visual"><br><sub><b>Basic</b></sub></td>
-    <td align="center"><img src="images/link-deleted.gif" width="210" alt="Deleted link — Snorlax blocks the way"><br><sub><b>Deleted link 💤</b></sub></td>
   </tr>
 </table>
+
+### Link not found (404)
+
+A deleted or mistyped link doesn't show a bare error: Snorlax is fast asleep in
+front of the gate, blocking the way.
+
+<p align="center">
+  <img src="images/link-deleted.gif" width="210" alt="Deleted link — Snorlax blocks the way">
+</p>
 
 ## Localization
 

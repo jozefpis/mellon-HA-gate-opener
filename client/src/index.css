@@ -414,6 +414,10 @@ select {
   color: #8fd6ff;
   border-color: #2b4a63;
 }
+.link-theme-select.theme-tardis {
+  color: #9dbcff;
+  border-color: #23407a;
+}
 .progress {
   height: 8px;
   background: var(--surface-2);

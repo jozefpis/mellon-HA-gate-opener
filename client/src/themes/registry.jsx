@@ -26,12 +26,22 @@ const DOOR_VIDEO = {
   openStill: '/hpdoor-open.jpg',
 };
 
+// TARDIS: the lamp flashes (vworp), the doors swing open on the console room
+// and smoke rolls out over the step.
+const TARDIS_VIDEO = {
+  intro: '/tardis-intro.mp4',
+  loop: '/tardis-loop.mp4',
+  poster: '/tardis-poster.jpg',
+  openStill: '/tardis-open.jpg',
+};
+
 // Opening music (Spotify): the first 30 s, which is also exactly what
 // logged-out listeners get (Spotify's 30 s preview).
 // HP: "Prologue" (Philosopher's Stone OST) — its preview opens right on the
 // iconic celesta Hedwig's Theme, unlike the full "Hedwig's Theme" track's.
 const HEDWIGS_THEME = { uri: 'spotify:track:6CeCOC2zx1qS8mQNYHe6IM', startAt: 0, stopAt: 30 };
 const SG1_MAIN_TITLE = { uri: 'spotify:track:3soC3EXUG0k4uyt73fi6A7', startAt: 0, stopAt: 30 };
+const DOCTOR_WHO_THEME = { uri: 'spotify:track:3npuD3aLlfd5XY9L3Yy63U', startAt: 0, stopAt: 30 };
 
 // Each theme renders its gate component (HP scenes share HpGate with props).
 // `g` is the gate state from useGate: { link, status, countdown, error, open }.
@@ -68,6 +78,17 @@ export const THEME_RENDERERS = {
       variant="sg"
     />
   ),
+  tardis: (g) => (
+    <HpGate
+      {...g}
+      video={TARDIS_VIDEO}
+      music={DOCTOR_WHO_THEME}
+      tagline="tardis_tagline"
+      objectPosition="center 40%"
+      buttonKey="tardis_button"
+      variant="tardis"
+    />
+  ),
   basic: (g) => <BasicGate {...g} />,
 };
 
@@ -77,5 +98,6 @@ export const VISUALS = [
   { code: 'hpdoor', key: 'theme_hpdoor' },
   { code: 'hp', key: 'theme_hp' },
   { code: 'stargate', key: 'theme_stargate' },
+  { code: 'tardis', key: 'theme_tardis' },
   { code: 'basic', key: 'theme_basic' },
 ];
