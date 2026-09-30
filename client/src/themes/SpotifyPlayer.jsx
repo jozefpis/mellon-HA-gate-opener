@@ -2,7 +2,7 @@ import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react';
 
 // Compact Spotify embed driven by the Spotify iFrame API. The embed loads with
 // the page (hidden until `visible`) so that `start()` can play it straight from
-// the click; playback then jumps to `startAt` seconds.
+// the click; playback jumps to `startAt` seconds and pauses at `stopAt` (if set).
 //
 // Browsers only let the embed make sound in response to a user gesture, so call
 // start() from the click handler. Listeners who aren't logged in to Spotify in
@@ -23,7 +23,7 @@ function loadSpotifyApi() {
   return apiPromise;
 }
 
-const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, visible, className }, ref) {
+const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stopAt, visible, className }, ref) {
   const hostRef = useRef(null);
   const ctrlRef = useRef(null);
   const wantRef = useRef(false); // start() was called (maybe before the embed was ready)
@@ -41,7 +41,13 @@ const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, visi
         // jump to startAt once playback is actually running
         ctrl.addListener('playback_update', (e) => {
           const d = e.data;
-          if (!wantRef.current || seekedRef.current || d.isPaused) return;
+          if (!wantRef.current || d.isPaused) return;
+          if (stopAt && d.position >= stopAt * 1000) {
+            wantRef.current = false;
+            ctrl.pause();
+            return;
+          }
+          if (seekedRef.current) return;
           seekedRef.current = true;
           // Logged-out listeners only get a ~30 s preview clip: seeking into it
           // would cut it short, so jump only when the full track is playing.
@@ -56,7 +62,7 @@ const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, visi
       ctrlRef.current?.destroy();
       ctrlRef.current = null;
     };
-  }, [uri, startAt]);
+  }, [uri, startAt, stopAt]);
 
   useImperativeHandle(ref, () => ({
     start() {

@@ -14,8 +14,9 @@ const DOORS_VIDEO = {
   openStill: '/lotr-open.jpg',
 };
 
-// Music for the opening: starts on "Mellon" and jumps to 0:27.
-const OPENING_TRACK = { uri: 'spotify:track:644es5aYPJghtZLjM1rmSP', startAt: 27 };
+// Music for the opening: the first 30 s, started by the "Mellon" click. That is
+// also exactly what logged-out listeners get (Spotify's 30 s preview).
+const OPENING_TRACK = { uri: 'spotify:track:644es5aYPJghtZLjM1rmSP', startAt: 0, stopAt: 30 };
 
 export default function LotrGate({ link, status, countdown, error, open }) {
   const { t } = useI18n();
@@ -50,6 +51,7 @@ export default function LotrGate({ link, status, countdown, error, open }) {
         ref={music}
         uri={OPENING_TRACK.uri}
         startAt={OPENING_TRACK.startAt}
+        stopAt={OPENING_TRACK.stopAt}
         visible={isOpen || status === 'sending'}
         className="lotr-music"
       />
