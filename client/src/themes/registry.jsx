@@ -28,7 +28,9 @@ const DOOR_VIDEO = {
 
 // Opening music (Spotify): the first 30 s, which is also exactly what
 // logged-out listeners get (Spotify's 30 s preview).
-const HEDWIGS_THEME = { uri: 'spotify:track:1n8NKQRg8LVHy7oUhUgbFF', startAt: 0, stopAt: 30 };
+// HP: "Prologue" (Philosopher's Stone OST) — its preview opens right on the
+// iconic celesta Hedwig's Theme, unlike the full "Hedwig's Theme" track's.
+const HEDWIGS_THEME = { uri: 'spotify:track:6CeCOC2zx1qS8mQNYHe6IM', startAt: 0, stopAt: 30 };
 const SG1_MAIN_TITLE = { uri: 'spotify:track:3soC3EXUG0k4uyt73fi6A7', startAt: 0, stopAt: 30 };
 
 // Each theme renders its gate component (HP scenes share HpGate with props).
