@@ -26,6 +26,11 @@ const DOOR_VIDEO = {
   openStill: '/hpdoor-open.jpg',
 };
 
+// Opening music (Spotify): the first 30 s, which is also exactly what
+// logged-out listeners get (Spotify's 30 s preview).
+const HEDWIGS_THEME = { uri: 'spotify:track:1n8NKQRg8LVHy7oUhUgbFF', startAt: 0, stopAt: 30 };
+const SG1_MAIN_TITLE = { uri: 'spotify:track:3soC3EXUG0k4uyt73fi6A7', startAt: 0, stopAt: 30 };
+
 // Each theme renders its gate component (HP scenes share HpGate with props).
 // `g` is the gate state from useGate: { link, status, countdown, error, open }.
 export const THEME_RENDERERS = {
@@ -34,6 +39,7 @@ export const THEME_RENDERERS = {
     <HpGate
       {...g}
       video={FIREPLACE_VIDEO}
+      music={HEDWIGS_THEME}
       tagline="hp_tagline"
       objectPosition="center 40%"
       buttonKey="hp_button"
@@ -44,6 +50,7 @@ export const THEME_RENDERERS = {
     <HpGate
       {...g}
       video={DOOR_VIDEO}
+      music={HEDWIGS_THEME}
       tagline="hpdoor_tagline"
       objectPosition="center 30%"
     />
@@ -52,6 +59,7 @@ export const THEME_RENDERERS = {
     <HpGate
       {...g}
       video={STARGATE_VIDEO}
+      music={SG1_MAIN_TITLE}
       tagline="stargate_tagline"
       objectPosition="center 42%"
       buttonKey="stargate_button"

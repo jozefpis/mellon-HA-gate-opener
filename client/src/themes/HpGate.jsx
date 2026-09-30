@@ -1,5 +1,7 @@
+import { useEffect, useRef } from 'react';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
 import SceneVideo from './SceneVideo.jsx';
+import OpeningMusic from './OpeningMusic.jsx';
 import './hp.css';
 
 export default function HpGate({
@@ -15,18 +17,31 @@ export default function HpGate({
   buttonKey, // translation key for the button; falls back to the "Alohomora" charm
   variant, // optional color variant class, e.g. 'sg' for the cyan Stargate palette
   video, // optional { intro, loop, poster, openStill }: animated scene instead of the image pair
+  music, // optional { uri, startAt, stopAt }: Spotify track started by the button
 }) {
   const { t } = useI18n();
   const buttonLabel = buttonKey ? t(buttonKey) : 'Alohomora';
   const remaining = link?.remaining ?? 0;
   const isOpen = status === 'opening' || status === 'success';
   const canPress = status === 'ready';
+  const musicRef = useRef(null);
+
+  // the open request failed (back to the button) or was refused: stop the music
+  useEffect(() => {
+    if (status === 'ready' || status === 'limit' || status === 'disabled') musicRef.current?.stop();
+  }, [status]);
+
+  const cast = () => {
+    musicRef.current?.start(); // inside the click, so the browser lets it play
+    open();
+  };
 
   return (
     <div
       className={`hp-theme ${variant ? `variant-${variant}` : ''} ${isOpen ? 'is-open' : ''}`}
     >
       <LocaleSwitcher className="on-dark" />
+      {music && <OpeningMusic ref={musicRef} track={music} />}
 
       {/* Idle scene cross-fades to the activated (spell-cast) scene on top */}
       <div className="hp-bg" aria-hidden>
@@ -45,7 +60,7 @@ export default function HpGate({
         {canPress && (
           <>
             <p className="hp-tagline">{t(tagline)}</p>
-            <button className="alohomora-btn" onClick={open}>
+            <button className="alohomora-btn" onClick={cast}>
               <span>{buttonLabel}</span>
             </button>
             <p className="hp-remaining">

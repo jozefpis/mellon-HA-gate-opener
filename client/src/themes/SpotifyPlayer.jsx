@@ -22,11 +22,13 @@ function loadSpotifyApi() {
   return apiPromise;
 }
 
-const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stopAt, className }, ref) {
+const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stopAt, className, onPlayingChange }, ref) {
   const hostRef = useRef(null);
   const ctrlRef = useRef(null);
   const wantRef = useRef(false); // start() was called (maybe before the embed was ready)
   const seekedRef = useRef(false);
+  const notify = useRef(onPlayingChange);
+  notify.current = onPlayingChange;
 
   useEffect(() => {
     let dead = false;
@@ -40,10 +42,13 @@ const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stop
         // jump to startAt once playback is actually running
         ctrl.addListener('playback_update', (e) => {
           const d = e.data;
+          const ended = d.duration > 0 && d.position >= d.duration - 250;
+          notify.current?.(!d.isPaused && !ended);
           if (!wantRef.current || d.isPaused) return;
           if (stopAt && d.position >= stopAt * 1000) {
             wantRef.current = false;
             ctrl.pause();
+            notify.current?.(false);
             return;
           }
           if (seekedRef.current) return;
@@ -72,6 +77,12 @@ const SpotifyPlayer = forwardRef(function SpotifyPlayer({ uri, startAt = 0, stop
     stop() {
       wantRef.current = false;
       ctrlRef.current?.pause();
+    },
+    pause() {
+      ctrlRef.current?.pause();
+    },
+    resume() {
+      ctrlRef.current?.resume();
     },
   }));
 

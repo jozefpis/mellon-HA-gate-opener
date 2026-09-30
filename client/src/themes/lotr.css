@@ -65,26 +65,6 @@
   object-fit: contain;
 }
 
-/* ---- Opening music (Spotify embed) ---- */
-/* Plays but is never shown: fully transparent and click-through. It stays
-   rendered in place (not display:none or off-screen), because browsers may
-   stop or throttle a hidden cross-origin player. */
-.lotr-music {
-  position: absolute;
-  z-index: 0;
-  left: 50%;
-  bottom: calc(env(safe-area-inset-bottom, 0px) + 40px + 10.5rem + 14px);
-  width: min(360px, calc(100% - 40px));
-  height: 80px;
-  transform: translateX(-50%);
-  opacity: 0;
-  pointer-events: none;
-}
-.lotr-music iframe {
-  display: block;
-  border: 0;
-}
-
 /* ---- Content / controls ---- */
 .lotr-content {
   position: relative;

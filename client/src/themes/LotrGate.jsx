@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useI18n, LocaleSwitcher } from '../i18n.jsx';
 import SceneVideo from './SceneVideo.jsx';
-import SpotifyPlayer from './SpotifyPlayer.jsx';
+import OpeningMusic from './OpeningMusic.jsx';
 import './lotr.css';
 
 // Ithildin reveal: strokes light up from the pillar bases, the inscription is
@@ -47,13 +47,7 @@ export default function LotrGate({ link, status, countdown, error, open }) {
         </div>
       </div>
 
-      <SpotifyPlayer
-        ref={music}
-        uri={OPENING_TRACK.uri}
-        startAt={OPENING_TRACK.startAt}
-        stopAt={OPENING_TRACK.stopAt}
-        className="lotr-music"
-      />
+      <OpeningMusic ref={music} track={OPENING_TRACK} />
 
       <div className="lotr-content">
         {canPress && (
