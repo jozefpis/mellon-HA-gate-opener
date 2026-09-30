@@ -10,8 +10,8 @@ export default function HpGate({
   countdown,
   error,
   open,
-  idle = '/harry-potter.png',
-  active = '/harry-potter-activated.png',
+  idle, // still image pair, for a scene without a video
+  active,
   tagline = 'hp_tagline',
   objectPosition = 'center 40%',
   buttonKey, // translation key for the button; falls back to the "Alohomora" charm
